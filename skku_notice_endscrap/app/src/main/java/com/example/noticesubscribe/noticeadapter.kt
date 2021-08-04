@@ -1,6 +1,8 @@
 package com.example.noticesubscribe
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.Layout
 import android.view.LayoutInflater
@@ -9,17 +11,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 
 
 class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice>) : RecyclerView.Adapter<NoticeAdapter.CustomViewHolder>(){
     //공지들이 표시되는 recyclerview를 사용하기 위해 만든 adpater
-    interface ItemClick{ // 버튼 클릭을 감지하기 위한 interface
-        fun onClick(view: View, position: Int)
-    }
-    var itemClick:ItemClick?= null
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int
@@ -41,12 +39,13 @@ class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice
         holder.date.text = noticeList.get(position).date
         holder.visited.text = noticeList.get(position).visited
         holder.link.text = noticeList.get(position).link
-            //링크이동구현
-        if(itemClick!=null){
-            holder?.itemView?.setOnClickListener{v->
-                itemClick?.onClick(v,position)
-            }
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.skku.edu/skku/campus/skk_comm/notice01.do"+holder.link.text.toString()))
+            startActivity(parentContext, intent, null)
         }
+
+
         val innerDb = Room.databaseBuilder(
             parentContext.applicationContext,
             AppDatabase::class.java, "notice"

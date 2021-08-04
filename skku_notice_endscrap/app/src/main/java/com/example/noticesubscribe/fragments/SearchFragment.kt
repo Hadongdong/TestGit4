@@ -57,9 +57,6 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.rv_searchnotice)
         val notice_list = arrayListOf<Notice>()
-//      val historylist = arrayListOf<Searchhistory>()
-//        val noticeadapter = NoticeAdapter(view.context, notice_list)
-//       val historyadapter = HistoryAdapter(historylist)
         val recyclerView1 = view.findViewById<RecyclerView>(R.id.rv_searchhistory)
         var searchOption = "title"
         val searchOption2 = "history"
@@ -129,16 +126,6 @@ class SearchFragment : Fragment() {
         (mBinding?.rvSearchhistory?.adapter as HistoryAdapter).getDataFromFirestore()
 
 
-
-        //클릭한 공지사항 링크이동(noticeadapter의 context부분해결필요!!)
-        noticeadapter?.itemClick = object : NoticeAdapter.ItemClick {
-            override fun onClick(view: View, pos: Int) {
-                Toast.makeText(getContext(), "2글자 이상 10글자 이하로 키워드를 입력해주세요", Toast.LENGTH_SHORT).show()
-                val link: TextView = view.findViewById(R.id.linkView)
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+link.text.toString()))
-                startActivity(intent)
-            }
-        }
 
 
     }
