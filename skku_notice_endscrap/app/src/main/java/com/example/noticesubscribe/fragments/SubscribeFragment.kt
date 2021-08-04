@@ -33,10 +33,7 @@ class SubscribeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.rv_subscribe)
-//        val notice_list = arrayListOf<notices>(
-//            notices("title221", "2020_07_01", "100", "http.."),
-//            notices("title222", "2020_07_02", "200", "http..")
-//        )
+
 
 
         val innerDb = activity?.let {

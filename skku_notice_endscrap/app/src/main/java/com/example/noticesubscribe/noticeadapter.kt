@@ -41,13 +41,12 @@ class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice
         holder.date.text = noticeList.get(position).date
         holder.visited.text = noticeList.get(position).visited
         holder.link.text = noticeList.get(position).link
-        //링크이동구현
+            //링크이동구현
         if(itemClick!=null){
-            holder?.itemView.setOnClickListener{v->
+            holder?.itemView?.setOnClickListener{v->
                 itemClick?.onClick(v,position)
             }
         }
-
         val innerDb = Room.databaseBuilder(
             parentContext.applicationContext,
             AppDatabase::class.java, "notice"

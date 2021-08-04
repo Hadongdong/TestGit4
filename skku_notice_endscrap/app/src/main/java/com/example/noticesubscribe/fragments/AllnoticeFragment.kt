@@ -19,6 +19,7 @@ import com.example.noticesubscribe.R
 import com.example.noticesubscribe.databinding.FragmentAllnoticeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import io.grpc.Contexts
 
 
 class AllnoticeFragment : Fragment() {
@@ -28,13 +29,13 @@ class AllnoticeFragment : Fragment() {
     val db=FirebaseFirestore.getInstance()
     //클릭한 공지사항 링크이동에 필요한 리스트와 어댑터
     val noticeList = arrayListOf<Notice>()
-    val noticeadapter=NoticeAdapter(requireContext(), noticeList)//context 부분때문에 오류발생
+    val noticeadapter= view?.let { NoticeAdapter(it.context, noticeList) }//context 부분때문에 오류발생
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val binding = FragmentAllnoticeBinding.inflate(inflater,container,false)
         val noticeList = arrayListOf<Notice>()
-        val noticeadapter=NoticeAdapter(requireContext(), noticeList)//context 부분때문에 오류발생
+       // val noticeadapter=NoticeAdapter(requireContext(), noticeList)//context 부분때문에 오류발생
         mBinding = binding
 
         return mBinding?.root
@@ -56,10 +57,10 @@ class AllnoticeFragment : Fragment() {
         (mBinding?.rvAllnotice?.adapter as NoticeAdapter).load()//전체 공지사항 보이기
 
         //클릭한 공지사항 링크이동(noticeadapter의 context부분해결필요!!)
-        noticeadapter.itemClick = object : NoticeAdapter.ItemClick {
+        noticeadapter?.itemClick = object : NoticeAdapter.ItemClick {
             override fun onClick(view: View, pos: Int) {
                 val link: TextView = view.findViewById(R.id.linkView)
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+link))
+                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do" +link.text.toString()))
                 startActivity(intent)
             }
         }

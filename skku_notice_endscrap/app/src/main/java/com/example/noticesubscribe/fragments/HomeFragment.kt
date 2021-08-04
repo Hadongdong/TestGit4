@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     val keyadapter = KeyWordAdapter(keyList)//첫번째 리사이클러뷰 어댑터 부르기(구독키워드)
     //클릭한 공지사항 링크이동에 필요한 리스트와 어댑터
     val noticeList = arrayListOf<Notice>()
-    val noticeadapter=NoticeAdapter(requireContext(), noticeList)//context 부분때문에 오류발생
+    val noticeadapter= view?.let { NoticeAdapter(it.context, noticeList) }///context 부분때문에 오류발생
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,12 +91,16 @@ class HomeFragment : Fragment() {
             }
         }
         //클릭한 공지사항 링크이동(noticeadapter의 context부분오류!!)
-        noticeadapter.itemClick = object : NoticeAdapter.ItemClick {
+        noticeadapter?.itemClick = object : NoticeAdapter.ItemClick {
             override fun onClick(view: View, pos: Int) {
                 val link: TextView = view.findViewById(R.id.linkView)
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+link))
+                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+ link.text.toString()))
                 startActivity(intent)
             }
+        }
+        mBinding?.button2?.setOnClickListener{
+            var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.naver.com"))
+            startActivity(intent)
         }
 
         recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)

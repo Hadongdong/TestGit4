@@ -31,8 +31,8 @@ class SearchFragment : Fragment() {
 
     val historylist = arrayListOf<Searchhistory>()
     val historyadapter = HistoryAdapter(historylist)
-    val notice_list = arrayListOf<Notice>()
-    val noticeadapter=NoticeAdapter(requireContext(), notice_list)//context부분 수정필요!!!
+    val noticeList = arrayListOf<Notice>()
+    val noticeadapter= view?.let { NoticeAdapter(it.context, noticeList) }///context부분 수정필요!!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,10 +131,11 @@ class SearchFragment : Fragment() {
 
 
         //클릭한 공지사항 링크이동(noticeadapter의 context부분해결필요!!)
-        noticeadapter.itemClick = object : NoticeAdapter.ItemClick {
+        noticeadapter?.itemClick = object : NoticeAdapter.ItemClick {
             override fun onClick(view: View, pos: Int) {
+                Toast.makeText(getContext(), "2글자 이상 10글자 이하로 키워드를 입력해주세요", Toast.LENGTH_SHORT).show()
                 val link: TextView = view.findViewById(R.id.linkView)
-                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+link))
+                var intent = Intent(Intent.ACTION_VIEW, Uri.parse(" https://www.skku.edu/skku/campus/skk_comm/notice01.do"+link.text.toString()))
                 startActivity(intent)
             }
         }
