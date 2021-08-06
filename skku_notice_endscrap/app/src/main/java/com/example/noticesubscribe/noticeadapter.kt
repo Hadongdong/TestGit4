@@ -45,7 +45,6 @@ class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice
             startActivity(parentContext, intent, null)
         }
 
-
         val innerDb = Room.databaseBuilder(
             parentContext.applicationContext,
             AppDatabase::class.java, "notice"

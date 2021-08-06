@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.noticesubscribe.MyFirebaseMessagingService
 import com.example.noticesubscribe.R
 import com.example.noticesubscribe.databinding.FragmentAlarmBinding
 import com.example.noticesubscribe.databinding.FragmentSearchBinding
@@ -29,4 +30,14 @@ class AlarmFragment : Fragment() {
         mBinding = null
         super.onDestroyView()
     }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        mBinding?.switch1?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                MyFirebaseMessagingService()
+            }
+        }
+    }
+
+
+
 }

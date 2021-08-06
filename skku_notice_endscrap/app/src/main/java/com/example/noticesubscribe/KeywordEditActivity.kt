@@ -55,42 +55,59 @@ class KeywordEditActivity : AppCompatActivity() {
         //키워드 추가부분
         mainbinding?.btnAddkeyword?.setOnClickListener {
             val input = binding.keywordinput
-            if (input.length() <= 1 || input.length() >= 11){
-                Toast.makeText(this, "2글자 이상 10글자 이하로 키워드를 입력해주세요", Toast.LENGTH_SHORT).show()
+            val input_tostring = input.text.toString()
+            val inputToKeyword = Keyword(input_tostring)
+            when {
+                // 오류가 나는 첫번째 조건
+                (input.length() <= 1 || input.length() >= 11) -> {
+                    Toast.makeText(this, "2글자 이상 10글자 이하로 키워드를 입력해주세요", Toast.LENGTH_SHORT).show()
+                }
+                // 오류가 나는 두번째 조건
+                (inputToKeyword in keyList) -> {
+                    Toast.makeText(this, "이미 등록된 키워드입니다", Toast.LENGTH_SHORT).show()
 
-        }   else{
-                // EditText에서 문자열을 가져와 hashMap으로 만듦
-                val data2 = hashMapOf("key" to input.text.toString(),"timestamp" to FieldValue.serverTimestamp())
+                }
 
+                // 정상적으로 실행이 잘 되는 조건
+                else -> {
+                    // EditText에서 문자열을 가져와 hashMap으로 만듦
+                    val data2 = hashMapOf(
+                        "key" to input.text.toString(),
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
 
-                db.collection("Contacts")
-                    .add(data2)
-                    .addOnSuccessListener {documentReference ->
-                        // 성공할 경우
-                        Toast.makeText(this, "키워드가 추가되었습니다", Toast.LENGTH_SHORT).show()
-                        //itemSort(mDocuments!!.(data2))
-                        db.collection("Contacts")//작업할 컬렉션
-                            .orderBy("timestamp", Query.Direction.DESCENDING)
-                            .get() // 문서 가져오기
-                            .addOnSuccessListener { result,->
-                                keyList.clear()
-                                //성공 경우
-                                for (document in result) {
-                                    val item = Keyword(document["key"] as String)
-                                    keyList.add(item)
+                    db.collection("Contacts")
+                        .add(data2)
+                        .addOnSuccessListener { documentReference ->
+                            // 성공할 경우
+                            Toast.makeText(this, "키워드가 추가되었습니다", Toast.LENGTH_SHORT).show()
+                            //itemSort(mDocuments!!.(data2))
+                            db.collection("Contacts")//작업할 컬렉션
+                                .orderBy("timestamp", Query.Direction.DESCENDING)
+                                .get() // 문서 가져오기
+                                .addOnSuccessListener { result ->
+                                    keyList.clear()
+                                    //성공 경우
+                                    for (document in result) {
+                                        val item = Keyword(document["key"] as String)
+                                        keyList.add(item)
+                                    }
+                                    input.text = null
+                                    keyadapter.notifyDataSetChanged()//리사이클러뷰 갱신
                                 }
-                                input.text = null
-                                keyadapter.notifyDataSetChanged()//리사이클러뷰 갱신
-                            }
-                            .addOnFailureListener { exception ->
-                                //실패 경우
-                                Log.w("MainActivity", "Error getting documents: $exception")
-                            }
-                    }
-                    .addOnFailureListener { exception ->
-                        // 실패할 경우
-                        Log.w("MainActivity", "Error getting documents: $exception")
-                    }
+                                .addOnFailureListener { exception ->
+                                    //실패 경우
+                                    Log.w("MainActivity", "Error getting documents: $exception")
+                                }
+                        }
+                        .addOnFailureListener { exception ->
+                            // 실패할 경우
+                            Log.w("MainActivity", "Error getting documents: $exception")
+                        }
+
+
+                }
+
 
             }
 

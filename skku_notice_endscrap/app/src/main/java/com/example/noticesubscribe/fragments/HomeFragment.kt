@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,9 +12,7 @@ import com.example.noticesubscribe.databinding.FragmentHomeBinding
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.widget.ListAdapter
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.noticesubscribe.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -31,6 +28,7 @@ class HomeFragment : Fragment() {
     //var notice_list = ArrayList<Notice>()
     val keyList = arrayListOf<Keyword>()//첫번째 리스트 아이템 배열(구독키워드)
     val keyadapter = KeyWordAdapter(keyList)//첫번째 리사이클러뷰 어댑터 부르기(구독키워드)
+    val delete_btn = view?.findViewById< ImageView>(R.id.btn_delete2)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +56,14 @@ class HomeFragment : Fragment() {
             val intent = Intent(getActivity(), KeywordEditActivity::class.java)
             startActivity(intent)
         }
+        delete_btn?.setVisibility(View.INVISIBLE)
+       // delete_btn?.setVisibility(View.GONE);
+
+//        delete_btn?.setOnClickListener{
+//            delete_btn?.isEnabled=false
+//            delete_btn?.isClickable=false
+//        }
+        //delete_btn?.visibility=View.GONE
         val recyclerView = view.findViewById<RecyclerView>(R.id.rv_homenotice)
         val notice_list = arrayListOf<Notice>()
 //        val noticeadapter=NoticeAdapter(view.context, noticeList)
@@ -77,7 +83,24 @@ class HomeFragment : Fragment() {
         val gridLayoutManager = GridLayoutManager(view.context, 4)
         mBinding?.rvKeyword?.layoutManager = gridLayoutManager
         mBinding?.rvKeyword?.adapter = keyadapter
-        
+
+//        mBinding?.more?.setOnClickListener {
+//            db.collection("Contacts")
+//                .orderBy("timestamp", Query.Direction.DESCENDING)
+//                .get()
+//                .addOnSuccessListener { documents ->
+//                    for (document in documents) {
+//                        val item = document.toObject(Keyword::class.java)
+//                        keyList.add(item)
+//                    }
+//                    keyadapter.notifyDataSetChanged()
+//                }.addOnFailureListener { exception ->
+//                    Log.w("MainActivity", "Error getting documents: $exception")
+//                }
+//            mBinding?.rvKeyword2?.layoutManager = gridLayoutManager
+//            mBinding?.rvKeyword2?.adapter = keyadapter
+//        }
+
 
         //키워드 해당하는 공지사항 찾기
         keyadapter.itemClick = object : KeyWordAdapter.ItemClick {
@@ -86,11 +109,6 @@ class HomeFragment : Fragment() {
                 val searchOption = "title"//현재는 Notice에 키워드가 포함되어 있지 않아서 제목을 통해서 관련공지사항을 수집함. 추후에 키워드가 생겨나면 "keyword" 로 대체
                 (mBinding?.rvHomenotice?.adapter as NoticeAdapter).search(key.text.toString(), searchOption)
             }
-        }
-
-        mBinding?.button2?.setOnClickListener{
-            var intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.naver.com"))
-            startActivity(intent)
         }
 
         recyclerView.layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)

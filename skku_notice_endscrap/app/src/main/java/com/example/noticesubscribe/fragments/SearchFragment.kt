@@ -1,15 +1,15 @@
 package com.example.noticesubscribe.fragments
 
 import android.content.Intent
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
+import android.system.Os.remove
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,8 +31,7 @@ class SearchFragment : Fragment() {
 
     val historylist = arrayListOf<Searchhistory>()
     val historyadapter = HistoryAdapter(historylist)
-    val noticeList = arrayListOf<Notice>()
-    val noticeadapter= view?.let { NoticeAdapter(it.context, noticeList) }///context부분 수정필요!!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +59,7 @@ class SearchFragment : Fragment() {
         val recyclerView1 = view.findViewById<RecyclerView>(R.id.rv_searchhistory)
         var searchOption = "title"
         val searchOption2 = "history"
+
         //스피너 (제목,키워드) 생성
         mBinding?.spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -84,16 +84,27 @@ class SearchFragment : Fragment() {
         //검색버튼 클릭시
         mBinding?.button?.setOnClickListener {
             val input = mBinding?.searchWord
-            if (input?.length()!! <= 1 || input.length() >= 11) {
-                Toast.makeText(getContext(), "2글자 이상 10글자 이하로 키워드를 입력해주세요", Toast.LENGTH_SHORT).show()
-            } else {
-                //searchword에서 문자열을 가져와 hashMap으로 만듦
-                val data = hashMapOf("history" to input?.text?.toString(), "timestamp" to FieldValue.serverTimestamp())//검색 옵션에 따라 검색
-                (mBinding?.rvSearchnotice?.adapter as NoticeAdapter).search2(mBinding?.searchWord?.text.toString(), searchOption)
-                //검색어 기록
-                (mBinding?.rvSearchhistory?.adapter as HistoryAdapter).search3(data, searchOption2)
+            val input_tostring = input?.text.toString()
+            val input_ToHistory = Searchhistory(input_tostring)
+            when {
+                (input?.length()!! <= 1 || input.length() >= 11) -> {
+                    Toast.makeText(getContext(), "2글자 이상 10글자 이하로 검색어를 입력해주세요", Toast.LENGTH_SHORT).show()
+                }
+                (input_ToHistory in historylist) -> {
+                    Toast.makeText(getContext(), "이미 등록된 검색어입니다", Toast.LENGTH_SHORT).show()
+                    //(mBinding?.rvSearchhistory?.adapter as HistoryAdapter).getDataFromFirestore()
+                    //itemDelete(mDocuments!!)
+                }
+                else -> {
+                    //searchword에서 문자열을 가져와 hashMap으로 만듦
+                    val data = hashMapOf("history" to input?.text?.toString(), "timestamp" to FieldValue.serverTimestamp())//검색 옵션에 따라 검색
+                    (mBinding?.rvSearchnotice?.adapter as NoticeAdapter).search2(mBinding?.searchWord?.text.toString(), searchOption)
+                    //검색어 기록
+                    (mBinding?.rvSearchhistory?.adapter as HistoryAdapter).search3(data, searchOption2)
+                }
             }
         }
+
         mBinding?.searhDelete?.setOnClickListener{
             val input = mBinding?.searchWord
             input?.getText()?.clear()
@@ -115,6 +126,7 @@ class SearchFragment : Fragment() {
         }
 
         (mBinding?.rvSearchhistory?.adapter as HistoryAdapter).getDataFromFirestore()
+
         //검색어 ,클릭삭제 관련부분
         historyadapter.deleteClick = object:HistoryAdapter.ItemClick {
             override fun onClick(v: View, pos: Int) {
@@ -124,10 +136,6 @@ class SearchFragment : Fragment() {
             }
        }
         (mBinding?.rvSearchhistory?.adapter as HistoryAdapter).getDataFromFirestore()
-
-
-
-
     }
     //검색기록 추가
     fun HistoryAdapter.search3(word: HashMap<String, Any?>, option: String) {
