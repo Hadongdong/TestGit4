@@ -15,5 +15,7 @@ data class Notice(
     @PrimaryKey var title: String = "",
     @ColumnInfo(name="date") var date: String = "",
     @ColumnInfo(name="visited") var visited: String = "",
-    @ColumnInfo(name="link") var link: String = ""
+    @ColumnInfo(name="link") var link: String = "",
+    @ColumnInfo(name="text") var text: String = ""
+
 )

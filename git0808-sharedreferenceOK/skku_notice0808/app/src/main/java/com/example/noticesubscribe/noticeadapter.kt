@@ -2,14 +2,11 @@ package com.example.noticesubscribe
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Bundle
-import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -39,9 +36,33 @@ class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice
         holder.date.text = noticeList.get(position).date
         holder.visited.text = noticeList.get(position).visited
         holder.link.text = noticeList.get(position).link
+        holder.text.text = noticeList.get(position).text
+
+
+
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.skku.edu/skku/campus/skk_comm/notice01.do"+holder.link.text.toString()))
+//            여기 아래 3줄은 크롬으로 바로 창을 여는 코드이다
+//            Log.d("noticeadapter", "여기에서의 명령을 실행한거")
+//            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.skku.edu/skku/campus/skk_comm/notice01.do"+holder.link.text.toString()))
+//            startActivity(parentContext, intent, null)
+
+            // 공지사항을 누르면 NoticeClickActivity 실행함
+            val intent = Intent(parentContext, NoticeClickActivity::class.java).apply {
+                putExtra("title", holder.title.text.toString())
+//            putExtra("date", holder.date.text)
+//            putExtra("visited", holder.visited.text)
+//            putExtra("link", holder.link.text)
+                //나중에 같은 방법으로 내용까지 넣을 때 이 주석을 사용하면 된다
+                //putExtra("content", holder.content.text)
+            }
+            //intent에 전달할 정보를 더 넣어서 새로운 엑티비티에 건내준다 -창
+//            if (holder.title.text.toString() != null){
+//                Log.d("notnull", "${holder.title.text.toString()}")
+//            } else{
+//                Log.d("notnull", "눌이다")
+//
+//            }
             startActivity(parentContext, intent, null)
         }
 
@@ -67,7 +88,7 @@ class NoticeAdapter( val parentContext: Context,val noticeList: ArrayList<Notice
         val visited = itemView.findViewById<TextView>(R.id.visitedView) // 조회수
         val link = itemView.findViewById<TextView>(R.id.linkView) // 링크
         val scrap = itemView.findViewById<Button>(R.id.bt_keep_button)
-
+        val text = itemView.findViewById<TextView>(R.id.textView)
     }
 
 

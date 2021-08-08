@@ -8,6 +8,7 @@
     android:layout_height="wrap_content">
     //공지recyclerview양식
     //낱개의 공지 레이어
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constrainview"
         android:layout_width="369dp"
@@ -51,6 +52,7 @@
             app:layout_constraintStart_toStartOf="@+id/titleView"
             app:layout_constraintTop_toBottomOf="@+id/titleView" />
         //공지 조회수
+
         <TextView
             android:id="@+id/visitedView"
             android:layout_width="wrap_content"
@@ -78,8 +80,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/titleView"
             app:layout_constraintVertical_bias="1.0" />
+
         <TextView
             android:id="@+id/linkView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="link"
+            android:textColor="#00000000"
+            app:layout_constraintBottom_toBottomOf="@+id/titleView"
+            app:layout_constraintStart_toEndOf="@+id/titleView"
+            app:layout_constraintTop_toTopOf="@+id/titleView" />
+
+        <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="link"
